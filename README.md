@@ -37,28 +37,22 @@ maven 3.8.7
 ### 🔧 Instalação passo a passo
 
 1) Realizar o clone do projeto - git clone [https://github.com/bgrbarbosa/eventos.git]<br>
-![image](https://github.com/user-attachments/assets/5f96fcaf-33a8-45ca-9740-42ff4bee558c)
+![image](https://github.com/user-attachments/assets/6f1b2e4c-a7b6-432e-a3ec-85b40714e5f2)
 
-
-2) Para a build do front-end
-
-   2.1) Na pasta raiz do projeto rodar o comando: npm install<br>
-   2.2) ng serve
-
-3) Para buildar o back-end
-
-   3.1) Na pasta raiz da api (eventos-api) rodar o comando: mvn clean install (Para instalar as bibliotecas do projeto) <br>
+3) Para buildar o projeto
+   
+   3.1) Na pasta raiz do projeto, rodar o comando: mvn clean install (Para instalar as bibliotecas do projeto) <br>
    3.2) Rodar o comando : spring-boot:run (Para startar o projeto) 
  
 ## ⚙️ Executando os testes
 
-Após buildar o front-end e o back-end da aplicação, abrir o navegaor na url http://localhost:4200/home e a tela contendo os eventos cadastrados deverá ser exibida, caso exista evento cadastrado. Caso exista evento e o mesmo não apareca na tela, verifique se a api está de pé.
+Após o build da aplicação, abrir o navegaor na url http://localhost:8082 e a tela de login deverá ser exibida
+![image](https://github.com/user-attachments/assets/ad8a96e3-5a8d-4a90-ad8c-f81488194d86)
 
 
 ## 📦 Implantação
 
 1) Criando um build de deploy do backend: mvn clean install -DskipTests
-2) Criando um build de deploy do frontend: ng build
 
 ## 📌 Versão
 
