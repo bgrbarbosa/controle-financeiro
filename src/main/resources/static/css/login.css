@@ -1,0 +1,40 @@
+.body {
+  background-color: #ADD8E6;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 300px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+}
+
+.layout-form{
+    padding-top: 30px;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+}
+
+.layout-form-itens {
+    width: 400px;
+    height: 300px;
+    width: 400px; /* defina o tamanho da div */
+    margin: 0 auto;
+    position: absolute;
+    top: 40%;
+    left: 30%;
+}
+
+.form-itens{
+    margin-top: 10px
+}

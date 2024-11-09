@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <head th:replace="~{fragments :: head('Sistema de Controle Financeiro')}"></head>
+</head>
+<body>
+    <header th:replace="~{fragments :: header}"></header>
+    <div class="container">
+        <div class="text-center">
+            <h3>Relatório de Receitas</h3>
+            <br/>
+            <div class="d-flex justify-content-center align-items-center">
+                <form th:object="${lancamentoDTO}" method="GET" action="/relatorio/receita/period" onsubmit="return validateForm();">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="mb-3">
+                                <label class="form-label">Data Inicial</label>
+                                <input type="date" id="dt_init" name="dt_init" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="mb-3">
+                                <label class="form-label">Data Final</label>
+                                <input type="date" id="dt_final" name="dt_final" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label"></label>
+                            <div class="mb-3">
+                                <button th:if="${dt_init == null && dt_final == null}"
+                                        type="submit" class="btn btn-success" style="margin-right: 3px;">
+                                    Pesquisar
+                                </button>
+                                <a class="btn btn-secondary" th:if="${dt_init != null && dt_final != null}" th:href="@{/relatorio/receita}">Limpar filtros</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-7">
+                <div class="col-7">
+                    <div class="container">
+                        <div class="text-center">
+                            Total de despesas: R$<span id="total_despesa" name="total_despesa" th:text="${total_despesa}"/><br/>
+                            Total de receitas: R$<span id="total_receita" name="total_receita" th:text="${total_receita}"/>
+                        </div>
+                    </div>
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+            <div class="col-5">
+                <table class="table table-striped table-light table-hover" id="dataTable">
+                    <thead>
+                    <h6 th:if="${dt_init != null && dt_final != null}">
+                        Lançamentos de: <span th:text="${dt_init}"/> até: <span th:text="${dt_final}"/><br/>
+                    </h6>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Id</td>
+                        <td>Receita</td>
+                        <td>Vencimento</td>
+                        <td>Status</td>
+                        <td>Valor</td>
+                    </tr>
+                    <tr th:each="lancamento : ${lancamentos}">
+                        <td class="col-1" scope="row" th:text="${lancamento.id_lancamento}">ID</td>
+                        <td class="col-2" th:text="${lancamento.receita.desc_receita}">Receita</td>
+                        <td class="col-1" th:text="${lancamento.dt_venc}">Vencimento</td>
+                        <td class="col-1" th:text="${lancamento.status}">Status</td>
+                        <td class="col-1" th:text="${lancamento.vl_lanc}">Valor</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+        function validateForm() {
+         var dtInit = document.getElementById("dt_init").value;
+         var dtFinal = document.getElementById("dt_final").value;
+
+         if (!dtInit || !dtFinal) {
+             alert("Por favor, informe o período desejado");
+             return false; // Impede o envio do formulário
+         }
+
+         return true; // Permite o envio do formulário
+     }
+
+        const totalDespesa = parseFloat(document.getElementById('total_despesa').textContent) || 0;
+        const totalReceita = parseFloat(document.getElementById('total_receita').textContent) || 0;
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dados do Gráfico de Pizza
+            const pieCtx = document.getElementById('pieChart').getContext('2d');
+            const pieChart = new Chart(pieCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Receitas', 'Despesas'],
+                    datasets: [{
+                        label: 'Gráfico de Pizza',
+                        data: [totalReceita, totalDespesa], // Exemplo de dados
+                        backgroundColor: [
+                            'rgba(0,100,0)',
+                            'rgba(128,0,0)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Comparativo de rendimentos e despesas'
+                        }
+                    }
+                }
+            });
+                        // Dados do Gráfico de Barras
+            const barCtx = document.getElementById('barChart').getContext('2d');
+            const barChart = new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Receitas', 'Despesas'],
+                    datasets: [{
+                        label: 'Comparativo de rendimentos e despesas',
+                        data: [totalReceita, totalDespesa],
+                        backgroundColor: 'rgba(255,99,71)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'center',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Comparativo de rendimentos e despesas'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
